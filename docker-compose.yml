@@ -1,0 +1,14 @@
+services:
+  db:
+    image: postgres:16
+    container_name: dreamcollegefinder_postgres
+    environment:
+      POSTGRES_USER: dreamcollegefinder
+      POSTGRES_PASSWORD: dreamcollegefinder_pw
+      POSTGRES_DB: dreamcollegefinder
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+volumes:
+  pgdata:
