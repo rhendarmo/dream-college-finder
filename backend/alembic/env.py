@@ -7,7 +7,9 @@ from app.core.config import settings
 from sqlmodel import SQLModel
 
 # IMPORTANT: import models so SQLModel.metadata knows about tables
-from app.models import Profile  # noqa: F401
+from app.models.profile import Profile  # noqa: F401
+from app.models.school import School  # noqa: F401
+from app.models.recommendation import RecommendationRun, Recommendation  # noqa: F401
 
 config = context.config
 
