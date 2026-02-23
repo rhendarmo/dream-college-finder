@@ -12,6 +12,7 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [runId, setRunId] = useState<number | null>(null);
   const [results, setResults] = useState<RecommendationResultItem[]>([]);
+  const [profileId, setProfileId] = useState<number | null>(null);
 
   async function handleSubmit(payload: ProfileCreate) {
     setLoading(true);
@@ -21,8 +22,9 @@ export default function Home() {
 
     try {
       const profile = await api.createProfile(payload);
-      const run = await api.runRecommendations({ profile_id: profile.id, top_k: 10 });
+      setProfileId(profile.id);
 
+      const run = await api.runRecommendations({ profile_id: profile.id, top_k: 10 });
       setRunId(run.run_id);
       setResults(run.results);
     } catch (e: any) {
@@ -55,7 +57,7 @@ export default function Home() {
         </div>
       )}
 
-      <ResultsTable items={results} />
+      <ResultsTable items={results} profileId={profileId} />
       <ProbabilityChart items={results} />
     </main>
   );
