@@ -6,6 +6,7 @@ class Profile(SQLModel, table=True):
     __tablename__ = "profiles"
 
     id: Optional[int] = Field(default=None, primary_key=True)
+    user_id: int = Field(index=True)
 
     gpa: float
     sat: Optional[int] = None

@@ -4,6 +4,7 @@ import { useState } from "react";
 import ProfileForm from "@/components/ProfileForm";
 import ResultsTable from "@/components/ResultsTable";
 import ProbabilityChart from "@/components/ProbabilityChart";
+import AuthStatus from "@/components/AuthStatus";
 import { api } from "@/lib/api";
 import type { ProfileCreate, RecommendationResultItem } from "@/types/api";
 
@@ -36,11 +37,12 @@ export default function Home() {
 
   return (
     <main className="mx-auto min-h-screen max-w-5xl space-y-6 bg-slate-50 p-6 text-slate-900">
-      <div className="space-y-1">
-        <h1 className="text-3xl font-bold">dreamcollegefinder</h1>
-        <p className="text-slate-700">
-          MVP demo: Profile → Recommendations (Reach/Target/Safety)
-        </p>
+      <div className="flex items-start justify-between gap-4">
+        <div className="space-y-1">
+          <h1 className="text-3xl font-bold">dreamcollegefinder</h1>
+          <p className="text-slate-700">MVP demo: Profile → Recommendations (Reach/Target/Safety)</p>
+        </div>
+        <AuthStatus />
       </div>
 
       <ProfileForm onSubmit={handleSubmit} loading={loading} />
