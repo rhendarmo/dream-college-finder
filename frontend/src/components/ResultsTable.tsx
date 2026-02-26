@@ -34,9 +34,7 @@ export default function ResultsTable({ items, profileId }: Props) {
         </thead>
         <tbody>
           {items.map((r) => {
-            const href = profileId
-              ? `/schools/${r.school_id}?profileId=${profileId}`
-              : `/schools/${r.school_id}`;
+            const href = `/schools/${r.school_id}`;
 
             return (
               <tr key={r.school_id} className="border-b last:border-b-0 hover:bg-slate-50">

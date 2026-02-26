@@ -1,24 +1,18 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-const PROTECTED_PREFIXES = ["/dashboard", "/profile", "/onboarding"];
-
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  // Skip Next internals + static files
-  if (
-    pathname.startsWith("/_next") ||
-    pathname.startsWith("/favicon") ||
-    pathname.includes(".")
-  ) {
-    return NextResponse.next();
-  }
+  // Protect these routes
+  const isProtected =
+    pathname.startsWith("/dashboard") ||
+    pathname.startsWith("/profile") ||
+    pathname.startsWith("/onboarding") ||
+    pathname.startsWith("/schools");
 
-  const isProtected = PROTECTED_PREFIXES.some((p) => pathname.startsWith(p));
   if (!isProtected) return NextResponse.next();
 
-  // Cookie name must match what backend sets
   const accessToken = req.cookies.get("access_token")?.value;
 
   if (!accessToken) {
@@ -31,6 +25,7 @@ export function middleware(req: NextRequest) {
   return NextResponse.next();
 }
 
+// IMPORTANT: matcher must include /schools
 export const config = {
-  matcher: ["/dashboard/:path*", "/profile/:path*", "/onboarding/:path*"],
+  matcher: ["/dashboard/:path*", "/profile/:path*", "/onboarding/:path*", "/schools/:path*"],
 };

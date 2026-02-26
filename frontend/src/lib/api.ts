@@ -47,8 +47,8 @@ export const api = {
   getSchool: (schoolId: number) =>
     http<School>(`/schools/${schoolId}`, { method: "GET" }),
 
-  explainSchoolFit: (schoolId: number, profileId: number) =>
-    http<SchoolExplainResponse>(`/schools/${schoolId}/explain?profile_id=${profileId}`, {
+  explainSchoolFit: (schoolId: number) =>
+    http<{ school_id: number; explanation: string }>(`/schools/${schoolId}/explain`, {
       method: "GET",
     }),
 
