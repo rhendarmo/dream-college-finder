@@ -13,7 +13,8 @@ from app.repositories.recommendation_repo import (
     bulk_insert_recommendations,
     get_run_recommendations,
 )
-from app.services.recommendation_service import rank_schools_v1
+from app.services.recommendation_service import rank_schools_v1, rank_schools_v2, rank_schools_v2_balanced
+from app.db import session
 
 router = APIRouter(prefix="/recommendations", tags=["recommendations"])
 
@@ -60,9 +61,8 @@ def run_recommendations(
             detail="No schools available. Seed schools first.",
         )
 
-    ranked = rank_schools_v1(profile, schools, top_k=payload.top_k)
-
-    run = create_run(session, profile_id=profile.id, model_version="v1")
+    ranked = rank_schools_v2_balanced(session, profile, schools, top_k=payload.top_k)
+    run = create_run(session, profile_id=profile.id, model_version="v2")
 
     rec_rows: list[Recommendation] = []
     response_items: list[RunResponseItem] = []
