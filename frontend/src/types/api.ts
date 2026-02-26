@@ -45,3 +45,22 @@ export type SchoolExplainResponse = {
   profile_id: number;
   explanation: string;
 };
+
+export type RegisterRequest = { 
+  mail: string;
+  password: string 
+};
+
+export type LoginRequest = {
+  email: string;
+  password: string
+};
+
+export type MeResponse = {
+  id: number;
+  email: string
+};
+
+export type VerifyEmailResponse = {
+  message: string;
+};
