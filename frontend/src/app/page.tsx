@@ -1,29 +1,33 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { api } from "@/lib/api";
 
 export default function WelcomePage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    (async () => {
+      try {
+        await api.me();
+        router.replace("/dashboard");
+      } catch {
+        // not logged in -> stay on welcome page
+      }
+    })();
+  }, [router]);
+
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900">
       <div className="mx-auto flex max-w-5xl flex-col gap-10 px-6 py-12">
-        <header className="flex items-center justify-between">
-          <div className="text-2xl font-bold">dreamcollegefinder</div>
-          <div className="flex gap-3">
-            <Link className="rounded-md border bg-white px-4 py-2 hover:bg-slate-100" href="/login">
-              Log in
-            </Link>
-            <Link className="rounded-md border bg-white px-4 py-2 hover:bg-slate-100" href="/register">
-              Sign up
-            </Link>
-          </div>
-        </header>
-
         <section className="max-w-2xl space-y-4">
           <h1 className="text-4xl font-bold tracking-tight">
             Find colleges that fit your profile.
           </h1>
           <p className="text-lg text-slate-700">
-            Enter your academics and preferences once, then get Reach/Target/Safety recommendations with clear explanations.
+            Create one student profile, get Reach/Target/Safety recommendations, and understand why each school fits.
           </p>
 
           <div className="pt-2">
@@ -39,7 +43,7 @@ export default function WelcomePage() {
         <section className="grid gap-4 md:grid-cols-3">
           <Feature title="One profile" text="Create your student profile once and edit anytime." />
           <Feature title="Smart recommendations" text="Reach/Target/Safety breakdown with probabilities." />
-          <Feature title="Explainable results" text="See why a school is a good match for you." />
+          <Feature title="Explainable results" text="See why a school is a match for you." />
         </section>
       </div>
     </main>
