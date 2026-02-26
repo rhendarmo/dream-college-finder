@@ -7,9 +7,18 @@ export type ProfileCreate = {
   notes?: string | null;
 };
 
-export type Profile = ProfileCreate & {
+export type Profile = {
   id: number;
+  user_id: number;
+  gpa: number;
+  sat?: number | null;
+  act?: number | null;
+  intended_major: string;
+  location_preference?: string | null;
+  notes?: string | null;
 };
+
+export type ProfileUpsert = Omit<Profile, "id" | "user_id">;
 
 export type RecommendationRunRequest = {
   profile_id: number;

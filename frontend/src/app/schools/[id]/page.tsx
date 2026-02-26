@@ -1,21 +1,14 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import Link from "next/link";
 import { api } from "@/lib/api";
 import type { School } from "@/types/api";
 
 export default function SchoolDetailPage() {
   const params = useParams<{ id: string }>();
-  const searchParams = useSearchParams();
-  const profileIdParam = searchParams.get("profileId");
-
   const schoolId = useMemo(() => Number(params.id), [params.id]);
-  const profileId = useMemo(
-    () => (profileIdParam ? Number(profileIdParam) : null),
-    [profileIdParam]
-  );
 
   const [school, setSchool] = useState<School | null>(null);
   const [explanation, setExplanation] = useState<string | null>(null);
@@ -28,18 +21,20 @@ export default function SchoolDetailPage() {
     async function load() {
       setLoading(true);
       setErr(null);
+
       try {
+        // Middleware already ensures login cookie exists.
+        // Also ensure profile exists (if not, send user to onboarding).
+        await api.getMyProfile();
+
         const s = await api.getSchool(schoolId);
         if (cancelled) return;
         setSchool(s);
 
-        if (profileId) {
-          const ex = await api.explainSchoolFit(schoolId, profileId);
-          if (cancelled) return;
-          setExplanation(ex.explanation);
-        } else {
-          setExplanation(null);
-        }
+        // Use profile from current user (no profileId needed)
+        const ex = await api.explainSchoolFit(schoolId);
+        if (cancelled) return;
+        setExplanation(ex.explanation);
       } catch (e: any) {
         if (!cancelled) setErr(e?.message ?? "Failed to load school");
       } finally {
@@ -51,7 +46,7 @@ export default function SchoolDetailPage() {
     return () => {
       cancelled = true;
     };
-  }, [schoolId, profileId]);
+  }, [schoolId]);
 
   return (
     <main className="mx-auto min-h-screen max-w-4xl space-y-6 bg-slate-50 p-6 text-slate-900">
@@ -60,9 +55,11 @@ export default function SchoolDetailPage() {
           <h1 className="text-3xl font-bold">School Detail</h1>
           <p className="text-slate-700">dreamcollegefinder</p>
         </div>
-        <Link className="rounded-md border bg-white px-3 py-2 text-sm hover:bg-slate-100" href="/">
-          ← Back
-        </Link>
+        <div className="flex gap-3">
+          <Link className="rounded-md border bg-white px-3 py-2 text-sm hover:bg-slate-100" href="/dashboard">
+            ← Dashboard
+          </Link>
+        </div>
       </div>
 
       {loading && <div className="rounded-xl border bg-white p-4">Loading…</div>}
@@ -97,9 +94,7 @@ export default function SchoolDetailPage() {
           <div className="rounded-xl border bg-white p-4">
             <div className="text-xl font-semibold">Why this school?</div>
             <div className="mt-2 text-slate-800">
-              {profileId
-                ? explanation ?? "Generating explanation…"
-                : "Open this page from the recommendations table to include your profile context."}
+              {explanation ?? "Generating explanation…"}
             </div>
           </div>
         </>

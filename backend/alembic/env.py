@@ -9,6 +9,7 @@ from sqlmodel import SQLModel
 # IMPORTANT: import models so SQLModel.metadata knows about tables
 from app.models.profile import Profile  # noqa: F401
 from app.models.school import School  # noqa: F401
+from app.models.school_program import SchoolProgram  # noqa: F401
 from app.models.recommendation import RecommendationRun, Recommendation  # noqa: F401
 from app.models.user import User  # noqa: F401
 from app.models.email_verification import EmailVerificationToken  # noqa: F401

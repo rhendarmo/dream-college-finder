@@ -16,7 +16,6 @@ class Profile(SQLModel, table=True):
     location_preference: Optional[str] = None
     notes: Optional[str] = None
 
-
 class ProfileCreate(SQLModel):
     gpa: float
     sat: Optional[int] = None
