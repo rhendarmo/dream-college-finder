@@ -20,7 +20,7 @@ export default function LoginPage() {
 
     try {
       await api.login({ email, password });
-      router.push("/");
+      router.push("/onboarding/profile");
     } catch (e: any) {
       setErr(e?.message ?? "Login failed");
     } finally {

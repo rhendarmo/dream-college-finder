@@ -1,5 +1,6 @@
 import type {
   Profile,
+  ProfileUpsert,
   ProfileCreate,
   RecommendationRunRequest,
   RecommendationRunResponse,
@@ -37,17 +38,11 @@ async function http<T>(path: string, options?: RequestInit): Promise<T> {
 }
 
 export const api = {
-  createProfile: (payload: ProfileCreate) =>
-    http<Profile>("/profiles", {
-      method: "POST",
-      body: JSON.stringify(payload),
-    }),
-
-  runRecommendations: (payload: RecommendationRunRequest) =>
-    http<RecommendationRunResponse>("/recommendations/run", {
-      method: "POST",
-      body: JSON.stringify(payload),
-    }),
+  // createProfile: (payload: ProfileCreate) =>
+  //   http<Profile>("/profiles", {
+  //     method: "POST",
+  //     body: JSON.stringify(payload),
+  //   }),
 
   getSchool: (schoolId: number) =>
     http<School>(`/schools/${schoolId}`, { method: "GET" }),
@@ -81,4 +76,18 @@ export const api = {
     }),
 
   me: () => http<MeResponse>("/auth/me", { method: "GET" }),
+
+  getMyProfile: () => http<Profile>("/profiles/me", { method: "GET" }),
+
+  upsertMyProfile: (payload: ProfileUpsert) =>
+    http<Profile>("/profiles/me", {
+      method: "PUT",
+      body: JSON.stringify(payload),
+    }),
+
+  runRecommendations: (top_k = 10) =>
+    http<RecommendationRunResponse>("/recommendations/run", {
+      method: "POST",
+      body: JSON.stringify({ top_k }),
+    }),
 };
