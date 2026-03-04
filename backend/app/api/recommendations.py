@@ -1,20 +1,28 @@
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
-from sqlmodel import Session
+from sqlmodel import Session, select
 
 from app.db.session import get_session
-from app.repositories.profile_repo import get_profile
-from app.repositories.school_repo import list_schools
-from app.repositories.recommendation_repo import create_run, bulk_insert_recommendations, get_run_recommendations
-from app.services.recommendation_service import rank_schools_v1
+from app.dependencies.auth_deps import get_current_user
+from app.models.profile import Profile
+from app.models.user import User
+from app.models.school import School
 from app.models.recommendation import Recommendation
 
+from app.repositories.school_repo import list_schools
+from app.repositories.recommendation_repo import (
+    create_run,
+    bulk_insert_recommendations,
+    get_run_recommendations,
+    get_latest_run_for_profile_signature,
+)
+from app.services.profile_signature import make_profile_signature
+from app.services.recommendation_service import rank_schools_v2_balanced
 
 router = APIRouter(prefix="/recommendations", tags=["recommendations"])
 
 
 class RunRequest(BaseModel):
-    profile_id: int
     top_k: int = 10
 
 
@@ -33,18 +41,69 @@ class RunResponse(BaseModel):
 
 
 @router.post("/run", response_model=RunResponse)
-def run_recommendations(payload: RunRequest, session: Session = Depends(get_session)):
-    profile = get_profile(session, payload.profile_id)
-    if not profile:
-        raise HTTPException(status_code=404, detail="Profile not found")
+def run_recommendations(
+    payload: RunRequest,
+    session: Session = Depends(get_session),
+    current_user: User = Depends(get_current_user),
+):
+    # Always use the current user's single profile
+    profile = session.exec(
+        select(Profile).where(Profile.user_id == current_user.id)
+    ).first()
 
+    if not profile:
+        raise HTTPException(
+            status_code=400,
+            detail="No profile found. Please complete your profile first.",
+        )
+
+    # --- CACHE: compute signature + check latest run ---
+    signature = make_profile_signature(profile)
+
+    cached = get_latest_run_for_profile_signature(
+        session,
+        profile_id=profile.id,
+        signature=signature,
+        model_version="v2",
+    )
+
+    if cached:
+        recs = get_run_recommendations(session, cached.id)
+
+        # Turn saved recommendations into response items (including school name)
+        results: list[RunResponseItem] = []
+        for r in recs:
+            school = session.exec(select(School).where(School.id == r.school_id)).first()
+            results.append(
+                RunResponseItem(
+                    school_id=r.school_id,
+                    school_name=(school.name if school else ""),
+                    category=r.category,
+                    probability=r.probability,
+                    score=r.score,
+                    reason=r.reason,
+                )
+            )
+
+        return RunResponse(run_id=cached.id, results=results)
+
+    # --- no cache hit => compute new ---
     schools = list_schools(session)
     if not schools:
-        raise HTTPException(status_code=400, detail="No schools available. Seed schools first.")
+        raise HTTPException(
+            status_code=400,
+            detail="No schools available. Seed schools first.",
+        )
 
-    ranked = rank_schools_v1(profile, schools, top_k=payload.top_k)
+    ranked = rank_schools_v2_balanced(session, profile, schools, top_k=payload.top_k)
 
-    run = create_run(session, profile_id=profile.id, model_version="v1")
+    # IMPORTANT: pass profile_signature into run creation
+    run = create_run(
+        session,
+        profile_id=profile.id,
+        model_version="v2",
+        profile_signature=signature,
+    )
 
     rec_rows: list[Recommendation] = []
     response_items: list[RunResponseItem] = []

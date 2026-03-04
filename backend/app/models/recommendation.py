@@ -9,6 +9,7 @@ class RecommendationRun(SQLModel, table=True):
     profile_id: int
     model_version: str = "v1"
     created_at: Optional[str] = None  # keep simple for now
+    profile_signature: Optional[str] = Field(default=None, index=True)
 
 
 class Recommendation(SQLModel, table=True):

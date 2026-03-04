@@ -1,64 +1,60 @@
 "use client";
 
-import { useState } from "react";
-import ProfileForm from "@/components/ProfileForm";
-import ResultsTable from "@/components/ResultsTable";
-import ProbabilityChart from "@/components/ProbabilityChart";
+import Link from "next/link";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
-import type { ProfileCreate, RecommendationResultItem } from "@/types/api";
 
-export default function Home() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [runId, setRunId] = useState<number | null>(null);
-  const [results, setResults] = useState<RecommendationResultItem[]>([]);
-  const [profileId, setProfileId] = useState<number | null>(null);
+export default function WelcomePage() {
+  const router = useRouter();
 
-  async function handleSubmit(payload: ProfileCreate) {
-    setLoading(true);
-    setError(null);
-    setResults([]);
-    setRunId(null);
-
-    try {
-      const profile = await api.createProfile(payload);
-      setProfileId(profile.id);
-
-      const run = await api.runRecommendations({ profile_id: profile.id, top_k: 10 });
-      setRunId(run.run_id);
-      setResults(run.results);
-    } catch (e: any) {
-      setError(e?.message ?? "Something went wrong");
-    } finally {
-      setLoading(false);
-    }
-  }
+  useEffect(() => {
+    (async () => {
+      try {
+        await api.me();
+        router.replace("/dashboard");
+      } catch {
+        // not logged in -> stay on welcome page
+      }
+    })();
+  }, [router]);
 
   return (
-    <main className="mx-auto min-h-screen max-w-5xl space-y-6 bg-slate-50 p-6 text-slate-900">
-      <div className="space-y-1">
-        <h1 className="text-3xl font-bold">dreamcollegefinder</h1>
-        <p className="text-slate-700">
-          MVP demo: Profile → Recommendations (Reach/Target/Safety)
-        </p>
+    <main className="min-h-screen bg-slate-50 text-slate-900">
+      <div className="mx-auto flex max-w-5xl flex-col gap-10 px-6 py-12">
+        <section className="max-w-2xl space-y-4">
+          <h1 className="text-4xl font-bold tracking-tight">
+            Find colleges that fit your profile.
+          </h1>
+          <p className="text-lg text-slate-700">
+            Create one student profile, get Reach/Target/Safety recommendations, and understand why each school fits.
+          </p>
+
+          <div className="pt-2">
+            <Link
+              href="/register"
+              className="inline-flex items-center rounded-md bg-black px-5 py-3 text-white hover:opacity-90"
+            >
+              Find your fit →
+            </Link>
+          </div>
+        </section>
+
+        <section className="grid gap-4 md:grid-cols-3">
+          <Feature title="One profile" text="Create your student profile once and edit anytime." />
+          <Feature title="Smart recommendations" text="Reach/Target/Safety breakdown with probabilities." />
+          <Feature title="Explainable results" text="See why a school is a match for you." />
+        </section>
       </div>
-
-      <ProfileForm onSubmit={handleSubmit} loading={loading} />
-
-      {error && (
-        <div className="rounded-xl border border-red-300 bg-red-50 p-4 text-red-800">
-          {error}
-        </div>
-      )}
-
-      {runId && (
-        <div className="text-sm text-slate-600">
-          Recommendation run id: <span className="font-mono">{runId}</span>
-        </div>
-      )}
-
-      <ResultsTable items={results} profileId={profileId} />
-      <ProbabilityChart items={results} />
     </main>
+  );
+}
+
+function Feature({ title, text }: { title: string; text: string }) {
+  return (
+    <div className="rounded-xl border bg-white p-4">
+      <div className="font-semibold">{title}</div>
+      <div className="mt-1 text-sm text-slate-700">{text}</div>
+    </div>
   );
 }
