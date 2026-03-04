@@ -12,3 +12,5 @@ email-validator==2.1.1
 passlib[bcrypt]==1.7.4
 bcrypt==4.0.1
 pandas==2.2.2
+pgvector==0.4.2
+openai==2.24.0

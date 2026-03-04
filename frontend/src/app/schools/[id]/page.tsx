@@ -79,9 +79,9 @@ export default function SchoolDetailPage() {
             </div>
 
             <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-3">
-              <Stat label="Acceptance Rate" value={fmtPct(school.acceptance_rate)} />
-              <Stat label="Avg SAT" value={school.avg_sat?.toString() ?? "N/A"} />
-              <Stat label="Avg GPA" value={school.avg_gpa?.toFixed(2) ?? "N/A"} />
+              <Stat label="Acceptance Rate" value={fmtPct(school.admission_rate)} />
+              <Stat label="Avg SAT" value={school.sat_avg?.toString() ?? "N/A"} />
+              <Stat label="Avg GPA" value={school.gpa_avg?.toFixed(2) ?? "N/A"} />
             </div>
 
             {school.tags && (

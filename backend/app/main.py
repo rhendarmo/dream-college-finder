@@ -1,10 +1,13 @@
+from dotenv import load_dotenv
+load_dotenv()
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
 from app.api.profiles import router as profiles_router
 from app.api.schools import router as schools_router
 from app.api.recommendations import router as recommendations_router
 from app.api.auth import router as auth_router
+from app.api.rag import router as rag_router
 
 app = FastAPI(title="dreamcollegefinder API", version="0.3.0")
 
@@ -27,3 +30,4 @@ app.include_router(auth_router)
 app.include_router(profiles_router)
 app.include_router(schools_router)
 app.include_router(recommendations_router)
+app.include_router(rag_router)

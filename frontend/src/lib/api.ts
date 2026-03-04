@@ -90,4 +90,10 @@ export const api = {
       method: "POST",
       body: JSON.stringify({ top_k }),
     }),
+
+  askRag: (question: string, top_k = 6) =>
+  http<{ answer: string; citations: { source_id: string; title: string }[] }>(
+    "/rag/ask",
+    { method: "POST", body: JSON.stringify({ question, top_k }) }
+  ),
 };

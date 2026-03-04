@@ -13,7 +13,13 @@ export default function Navbar() {
   const [me, setMe] = useState<MeResponse | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const isPublic = pathname === "/" || pathname === "/login" || pathname === "/register" || pathname.startsWith("/verify-email");
+  const isPublic =
+    pathname === "/" ||
+    pathname === "/login" ||
+    pathname === "/register" ||
+    pathname.startsWith("/verify-email");
+
+  const isActive = (path: string) => (pathname === path ? "bg-slate-200" : "");
 
   useEffect(() => {
     let cancelled = false;
@@ -52,12 +58,33 @@ export default function Navbar() {
         <nav className="flex items-center gap-3">
           {!loading && me && (
             <>
-              <Link className="rounded-md border px-3 py-2 text-sm hover:bg-slate-100" href="/dashboard">
+              <Link
+                className={`rounded-md border px-3 py-2 text-sm hover:bg-slate-100 ${isActive(
+                  "/dashboard"
+                )}`}
+                href="/dashboard"
+              >
                 Dashboard
               </Link>
-              <Link className="rounded-md border px-3 py-2 text-sm hover:bg-slate-100" href="/profile">
+
+              <Link
+                className={`rounded-md border px-3 py-2 text-sm hover:bg-slate-100 ${isActive(
+                  "/assistant"
+                )}`}
+                href="/assistant"
+              >
+                AI Assistant
+              </Link>
+
+              <Link
+                className={`rounded-md border px-3 py-2 text-sm hover:bg-slate-100 ${isActive(
+                  "/profile"
+                )}`}
+                href="/profile"
+              >
                 Edit profile
               </Link>
+
               <button
                 onClick={handleLogout}
                 className="rounded-md border px-3 py-2 text-sm hover:bg-slate-100"
@@ -70,14 +97,31 @@ export default function Navbar() {
           {!loading && !me && (
             <>
               {!isPublic && (
-                <Link className="rounded-md border px-3 py-2 text-sm hover:bg-slate-100" href="/">
+                <Link
+                  className={`rounded-md border px-3 py-2 text-sm hover:bg-slate-100 ${isActive(
+                    "/"
+                  )}`}
+                  href="/"
+                >
                   Home
                 </Link>
               )}
-              <Link className="rounded-md border px-3 py-2 text-sm hover:bg-slate-100" href="/login">
+
+              <Link
+                className={`rounded-md border px-3 py-2 text-sm hover:bg-slate-100 ${isActive(
+                  "/login"
+                )}`}
+                href="/login"
+              >
                 Log in
               </Link>
-              <Link className="rounded-md border px-3 py-2 text-sm hover:bg-slate-100" href="/register">
+
+              <Link
+                className={`rounded-md border px-3 py-2 text-sm hover:bg-slate-100 ${isActive(
+                  "/register"
+                )}`}
+                href="/register"
+              >
                 Sign up
               </Link>
             </>

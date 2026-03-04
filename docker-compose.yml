@@ -1,6 +1,6 @@
 services:
   db:
-    image: postgres:16
+    image: pgvector/pgvector:pg16   # ✅ changed from postgres:16
     container_name: dreamcollegefinder_postgres
     environment:
       POSTGRES_USER: dreamcollegefinder
@@ -10,5 +10,6 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+
 volumes:
   pgdata:
