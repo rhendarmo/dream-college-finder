@@ -1,4 +1,4 @@
-# dreamcollegefinder
+# Dream College Finder
 
 AI-powered college recommendation platform that classifies schools into Reach / Target / Safety using academic profile inputs and provides explainable fit reasoning.
 
@@ -25,6 +25,7 @@ Built with:
 
 # 🏗 Project Architecture
 
+```
 dreamcollegefinder/
 │
 ├── backend/
@@ -51,6 +52,7 @@ dreamcollegefinder/
 │
 ├── docker-compose.yml
 └── README.md
+```
 
 ---
 

@@ -1,49 +1,17 @@
 import type {
   Profile,
   ProfileUpsert,
-  ProfileCreate,
-  RecommendationRunRequest,
   RecommendationRunResponse,
   School,
-  SchoolExplainResponse,
   RegisterRequest,
   LoginRequest,
   MeResponse,
   VerifyEmailResponse,
 } from "@/types/api";
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-
-if (!BASE_URL) {
-  throw new Error("Missing NEXT_PUBLIC_API_BASE_URL in .env.local");
-}
-
-async function http<T>(path: string, options?: RequestInit): Promise<T> {
-  const res = await fetch(`${BASE_URL}${path}`, {
-    ...options,
-    headers: {
-      "Content-Type": "application/json",
-      ...(options?.headers ?? {}),
-    },
-    credentials: "include", // IMPORTANT: cookie auth
-    cache: "no-store",
-  });
-
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`Request failed (${res.status}): ${text}`);
-  }
-
-  return res.json() as Promise<T>;
-}
+import { http } from "@/lib/http";
 
 export const api = {
-  // createProfile: (payload: ProfileCreate) =>
-  //   http<Profile>("/profiles", {
-  //     method: "POST",
-  //     body: JSON.stringify(payload),
-  //   }),
-
   getSchool: (schoolId: number) =>
     http<School>(`/schools/${schoolId}`, { method: "GET" }),
 
@@ -55,19 +23,19 @@ export const api = {
   register: (payload: RegisterRequest) =>
     http<{ message: string }>("/auth/register", {
       method: "POST",
-      body: JSON.stringify(payload),
+      body: payload, // ✅ no JSON.stringify needed now
     }),
 
   verifyEmail: (token: string) =>
     http<VerifyEmailResponse>("/auth/verify-email", {
       method: "POST",
-      body: JSON.stringify({ token }),
+      body: { token }, // ✅
     }),
 
   login: (payload: LoginRequest) =>
     http<{ message: string; user_id: number }>("/auth/login", {
       method: "POST",
-      body: JSON.stringify(payload),
+      body: payload, // ✅
     }),
 
   logout: () =>
@@ -82,18 +50,33 @@ export const api = {
   upsertMyProfile: (payload: ProfileUpsert) =>
     http<Profile>("/profiles/me", {
       method: "PUT",
-      body: JSON.stringify(payload),
+      body: payload, // ✅
     }),
 
   runRecommendations: (top_k = 10) =>
     http<RecommendationRunResponse>("/recommendations/run", {
       method: "POST",
-      body: JSON.stringify({ top_k }),
+      body: { top_k }, // ✅
     }),
 
   askRag: (question: string, top_k = 6) =>
-  http<{ answer: string; citations: { source_id: string; title: string }[] }>(
-    "/rag/ask",
-    { method: "POST", body: JSON.stringify({ question, top_k }) }
-  ),
+    http<{ answer: string; citations: { source_id: string; title: string }[] }>(
+      "/rag/ask",
+      { method: "POST", body: { question, top_k } } // ✅
+    ),
+
+  uploadResume: (file: File) => {
+    const form = new FormData();
+    form.append("file", file);
+
+    return http<any>("/resume/upload", {
+      method: "POST",
+      body: form, // ✅ helper detects FormData and avoids Content-Type
+    });
+  },
+
+  getMyResume: () => http<any>("/resume/me", { method: "GET" }),
+
+  runAdvice: () =>
+    http<{ cached: boolean; advice: any }>("/advice/run", { method: "POST" }),
 };
