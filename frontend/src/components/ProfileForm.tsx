@@ -36,7 +36,7 @@ export default function ProfileForm({ initial, onSubmit, loading, submitLabel }:
   const [sat, setSat] = useState(initial?.sat?.toString() ?? "");
   const [act, setAct] = useState(initial?.act?.toString() ?? "");
   const [intendedMajor, setIntendedMajor] = useState(initial?.intended_major ?? "Business Analytics");
-  const [locationPreference, setLocationPreference] = useState(initial?.location_preference ?? "CA");
+  const [locationPreference, setLocationPreference] = useState(initial?.location_preference ?? "");
   const [notes, setNotes] = useState(initial?.notes ?? "");
 
   function toNumberOrNull(v: string): number | null {

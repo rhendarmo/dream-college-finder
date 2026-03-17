@@ -14,6 +14,7 @@ from app.models.recommendation import RecommendationRun, Recommendation  # noqa:
 from app.models.user import User  # noqa: F401
 from app.models.email_verification import EmailVerificationToken  # noqa: F401
 from app.models.rag import RagDocument, RagEmbedding  # noqa: F401
+from app.models.resume import Resume, AdviceRun  # noqa: F401
 
 config = context.config
 

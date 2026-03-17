@@ -19,7 +19,8 @@ export default function Navbar() {
     pathname === "/register" ||
     pathname.startsWith("/verify-email");
 
-  const isActive = (path: string) => (pathname === path ? "bg-slate-200" : "");
+  const isActive = (path: string) =>
+    pathname === path ? "bg-slate-200" : "";
 
   useEffect(() => {
     let cancelled = false;
@@ -55,7 +56,8 @@ export default function Navbar() {
           Dream College Finder
         </Link>
 
-        <nav className="flex items-center gap-3">
+        <nav className="flex items-center gap-3 flex-wrap">
+          {/* Logged In */}
           {!loading && me && (
             <>
               <Link
@@ -76,6 +78,26 @@ export default function Navbar() {
                 AI Assistant
               </Link>
 
+              {/* NEW: Resume */}
+              <Link
+                className={`rounded-md border px-3 py-2 text-sm hover:bg-slate-100 ${isActive(
+                  "/resume"
+                )}`}
+                href="/resume"
+              >
+                Resume
+              </Link>
+
+              {/* NEW: Advice */}
+              <Link
+                className={`rounded-md border px-3 py-2 text-sm hover:bg-slate-100 ${isActive(
+                  "/advice"
+                )}`}
+                href="/advice"
+              >
+                Advice
+              </Link>
+
               <Link
                 className={`rounded-md border px-3 py-2 text-sm hover:bg-slate-100 ${isActive(
                   "/profile"
@@ -94,6 +116,7 @@ export default function Navbar() {
             </>
           )}
 
+          {/* Logged Out */}
           {!loading && !me && (
             <>
               {!isPublic && (
