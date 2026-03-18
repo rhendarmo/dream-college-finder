@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { ProfileUpsert } from "@/types/api";
+import { GraduationCap, ClipboardList, MapPin, FileText } from "lucide-react";
 
 type Props = {
   initial?: Partial<ProfileUpsert>;
@@ -62,34 +63,60 @@ export default function ProfileForm({ initial, onSubmit, loading, submitLabel }:
   }
 
   return (
-    <form onSubmit={handleSubmit} className="w-full max-w-xl space-y-4 rounded-xl border bg-white p-4">
-      <div className="text-xl font-semibold">Student Profile</div>
+    <form
+      onSubmit={handleSubmit}
+      className="w-full rounded-[28px] border border-white/50 bg-white/95 p-6 shadow-[0_18px_60px_rgba(15,23,42,0.14)] backdrop-blur md:p-8"
+    >
+      <div className="mb-6 flex items-center gap-3">
+        <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-50">
+          <GraduationCap className="h-5 w-5 text-blue-600" />
+        </div>
+        <div>
+          <div className="text-2xl font-bold text-slate-900">Student Profile</div>
+          <div className="text-sm text-slate-500">Keep this updated to improve recommendation quality.</div>
+        </div>
+      </div>
 
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-        <label className="space-y-1">
-          <div className="text-sm font-medium">GPA</div>
-          <input className="w-full rounded-md border px-3 py-2" value={gpa} onChange={(e) => setGpa(e.target.value)} required />
-        </label>
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <Field label="GPA">
+          <input
+            className="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-lg text-slate-900 outline-none placeholder:text-slate-400"
+            value={gpa}
+            onChange={(e) => setGpa(e.target.value)}
+            required
+          />
+        </Field>
 
-        <label className="space-y-1">
-          <div className="text-sm font-medium">SAT (optional)</div>
-          <input className="w-full rounded-md border px-3 py-2" value={sat} onChange={(e) => setSat(e.target.value)} />
-        </label>
+        <Field label="SAT Score" icon={<ClipboardList className="h-4 w-4 text-emerald-500" />}>
+          <input
+            className="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-lg text-slate-900 outline-none placeholder:text-slate-400"
+            value={sat}
+            onChange={(e) => setSat(e.target.value)}
+            placeholder="Optional"
+          />
+        </Field>
 
-        <label className="space-y-1">
-          <div className="text-sm font-medium">ACT (optional)</div>
-          <input className="w-full rounded-md border px-3 py-2" value={act} onChange={(e) => setAct(e.target.value)} />
-        </label>
+        <Field label="ACT Score">
+          <input
+            className="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-lg text-slate-900 outline-none placeholder:text-slate-400"
+            value={act}
+            onChange={(e) => setAct(e.target.value)}
+            placeholder="Optional"
+          />
+        </Field>
 
-        <label className="space-y-1 md:col-span-2">
-          <div className="text-sm font-medium">Intended Major</div>
-          <input className="w-full rounded-md border px-3 py-2" value={intendedMajor} onChange={(e) => setIntendedMajor(e.target.value)} required />
-        </label>
+        <Field label="Intended Major">
+          <input
+            className="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-lg text-slate-900 outline-none placeholder:text-slate-400"
+            value={intendedMajor}
+            onChange={(e) => setIntendedMajor(e.target.value)}
+            required
+          />
+        </Field>
 
-        <label className="space-y-1 md:col-span-2">
-          <div className="text-sm font-medium">State Preference</div>
+        <Field label="State Preference" icon={<MapPin className="h-4 w-4 text-blue-500" />}>
           <select
-            className="w-full rounded-md border px-3 py-2"
+            className="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-lg text-slate-900 outline-none"
             value={locationPreference}
             onChange={(e) => setLocationPreference(e.target.value)}
           >
@@ -99,17 +126,47 @@ export default function ProfileForm({ initial, onSubmit, loading, submitLabel }:
               </option>
             ))}
           </select>
-        </label>
+        </Field>
 
-        <label className="space-y-1 md:col-span-2">
-          <div className="text-sm font-medium">Notes (optional)</div>
-          <textarea className="w-full rounded-md border px-3 py-2" value={notes} onChange={(e) => setNotes(e.target.value)} rows={3} />
-        </label>
+        <Field label="Notes" icon={<FileText className="h-4 w-4 text-slate-500" />}>
+          <textarea
+            className="min-h-[128px] w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-lg text-slate-900 outline-none placeholder:text-slate-400"
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            placeholder="Optional"
+            rows={4}
+          />
+        </Field>
       </div>
 
-      <button disabled={loading} className="rounded-md bg-black px-4 py-2 text-white disabled:opacity-50">
-        {loading ? "Saving…" : submitLabel ?? "Save profile"}
-      </button>
+      <div className="mt-8 flex justify-center">
+        <button
+          disabled={loading}
+          className="min-w-[220px] rounded-2xl bg-gradient-to-b from-blue-400 to-blue-700 px-8 py-4 text-xl font-bold text-white shadow-[0_14px_35px_rgba(37,99,235,0.30)] transition hover:from-blue-300 hover:to-blue-600 disabled:opacity-50"
+        >
+          {loading ? "Saving…" : submitLabel ?? "Save profile"}
+        </button>
+      </div>
     </form>
+  );
+}
+
+function Field({
+  label,
+  icon,
+  children,
+}: {
+  label: string;
+  icon?: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <label className="space-y-2">
+      <div className="flex items-center gap-2 text-base font-semibold text-slate-800">
+        {icon}
+        <span>{label}</span>
+      </div>
+      <div>{children}</div>
+    </label>
   );
 }

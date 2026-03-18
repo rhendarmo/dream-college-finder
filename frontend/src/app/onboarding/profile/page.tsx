@@ -1,11 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
 import ProfileForm from "@/components/ProfileForm";
 import { api } from "@/lib/api";
 import type { ProfileUpsert } from "@/types/api";
+import { useRouter } from "next/navigation";
 
 export default function OnboardingProfilePage() {
   const router = useRouter();
@@ -16,15 +15,11 @@ export default function OnboardingProfilePage() {
   useEffect(() => {
     (async () => {
       try {
-        // Must be logged in
         await api.me();
-
-        // If profile already exists, skip onboarding
         await api.getMyProfile();
         router.replace("/dashboard");
       } catch {
-        // If /me fails -> send to login
-        // If profile not found -> stay here
+        // stay here if profile missing
       } finally {
         setLoading(false);
       }
@@ -45,24 +40,42 @@ export default function OnboardingProfilePage() {
   }
 
   if (loading) {
-    return <main className="min-h-screen bg-slate-50 p-6">Loading…</main>;
+    return (
+      <main className="relative min-h-screen overflow-hidden bg-[#dfe5f2]">
+        <div className="relative min-h-screen bg-[radial-gradient(circle_at_top,#5b7cf0_0%,#2d3e84_34%,#101a36_100%)]">
+          <section className="relative z-10 flex min-h-screen items-center justify-center px-6 pt-28 text-white">
+            Loading…
+          </section>
+        </div>
+      </main>
+    );
   }
 
   return (
-    <main className="mx-auto min-h-screen max-w-5xl space-y-6 bg-slate-50 p-6 text-slate-900">
-      <header className="flex items-center justify-between">
-        <div>
-          <div className="text-2xl font-bold">Complete your profile</div>
-          <div className="text-slate-700">This will be used to generate your recommendations.</div>
-        </div>
-        <Link className="rounded-md border bg-white px-3 py-2 text-sm hover:bg-slate-100" href="/">
-          ← Home
-        </Link>
-      </header>
+    <main className="relative min-h-screen overflow-hidden bg-[#dfe5f2] text-slate-900">
+      <div className="relative min-h-screen bg-[radial-gradient(circle_at_top,#5b7cf0_0%,#2d3e84_34%,#101a36_100%)]">
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.01))]" />
+        <div className="absolute left-[-8%] top-[22%] h-80 w-80 rounded-full bg-blue-400/20 blur-3xl" />
+        <div className="absolute right-[-8%] bottom-[14%] h-96 w-96 rounded-full bg-indigo-400/20 blur-3xl" />
+        <div className="absolute inset-x-0 bottom-0 h-72 bg-[radial-gradient(ellipse_at_bottom,rgba(96,165,250,0.28),transparent_60%)]" />
 
-      {err && <div className="rounded-xl border border-red-300 bg-red-50 p-4 text-red-800">{err}</div>}
+        <section className="relative z-10 mx-auto max-w-5xl px-6 pb-16 pt-32 md:px-8">
+          <div className="mb-8 text-white">
+            <h1 className="text-4xl font-bold md:text-5xl">Complete your profile</h1>
+            <p className="mt-3 text-lg text-blue-100">
+              This information will be used to generate your recommendations.
+            </p>
+          </div>
 
-      <ProfileForm onSubmit={handleSave} loading={saving} submitLabel="Save & continue" />
+          {err && (
+            <div className="mb-6 rounded-2xl border border-red-300 bg-red-50 px-4 py-3 text-red-800">
+              {err}
+            </div>
+          )}
+
+          <ProfileForm onSubmit={handleSave} loading={saving} submitLabel="Save & continue" />
+        </section>
+      </div>
     </main>
   );
 }

@@ -43,9 +43,14 @@ export type School = {
   id: number;
   name: string;
   state?: string | null;
-  acceptance_rate?: number | null;
-  avg_sat?: number | null;
-  avg_gpa?: number | null;
+  admission_rate?: number | null;
+  sat_avg?: number | null;
+  gpa_avg?: number | null;
+  tuition_in?: number | null;
+  tuition_out?: number | null;
+  grad_rate_4yr?: number | null;
+  grad_rate_lt4?: number | null;
+  median_earnings_10yr?: number | null;
   tags?: string | null;
 };
 

@@ -41,37 +41,53 @@ export default function ProfileEditPage() {
     }
   }
 
-  if (loading) return <main className="min-h-screen bg-slate-50 p-6">Loading…</main>;
+  if (loading) {
+    return <main className="min-h-screen bg-[#eef2ff] px-6 pt-28">Loading…</main>;
+  }
 
   return (
-    <main className="mx-auto min-h-screen max-w-5xl space-y-6 bg-slate-50 p-6 text-slate-900">
-      <header className="flex items-center justify-between">
-        <div>
-          <div className="text-2xl font-bold">Edit profile</div>
-          <div className="text-slate-700">Update your details anytime.</div>
+    <main className="relative min-h-screen overflow-hidden bg-[#eef2ff] text-slate-900">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,#f7f9ff_0%,#eef2ff_55%,#e7ecfb_100%)]" />
+      <div className="absolute left-[-8%] bottom-[6%] h-80 w-80 rounded-full bg-blue-200/35 blur-3xl" />
+      <div className="absolute right-[-8%] top-[20%] h-96 w-96 rounded-full bg-indigo-200/30 blur-3xl" />
+
+      <section className="relative z-10 mx-auto max-w-6xl px-6 pb-16 pt-28 md:px-8">
+        <div className="mb-8 flex items-start justify-between gap-4">
+          <div>
+            <h1 className="text-4xl font-bold text-slate-900">Edit Profile</h1>
+            <div className="mt-2 h-1 w-16 rounded-full bg-blue-400" />
+          </div>
+
+          <Link
+            className="rounded-2xl border border-slate-200 bg-white px-5 py-3 text-lg font-semibold text-slate-700 shadow-sm hover:bg-slate-50"
+            href="/dashboard"
+          >
+            ← Back to Dashboard
+          </Link>
         </div>
-        <Link className="rounded-md border bg-white px-3 py-2 text-sm hover:bg-slate-100" href="/dashboard">
-          ← Dashboard
-        </Link>
-      </header>
 
-      {err && <div className="rounded-xl border border-red-300 bg-red-50 p-4 text-red-800">{err}</div>}
+        {err && (
+          <div className="mb-6 rounded-2xl border border-red-300 bg-red-50 px-4 py-3 text-red-800">
+            {err}
+          </div>
+        )}
 
-      {profile && (
-        <ProfileForm
-          initial={{
-            gpa: profile.gpa,
-            sat: profile.sat,
-            act: profile.act,
-            intended_major: profile.intended_major,
-            location_preference: profile.location_preference,
-            notes: profile.notes,
-          }}
-          onSubmit={handleSave}
-          loading={saving}
-          submitLabel="Save changes"
-        />
-      )}
+        {profile && (
+          <ProfileForm
+            initial={{
+              gpa: profile.gpa,
+              sat: profile.sat,
+              act: profile.act,
+              intended_major: profile.intended_major,
+              location_preference: profile.location_preference,
+              notes: profile.notes,
+            }}
+            onSubmit={handleSave}
+            loading={saving}
+            submitLabel="Save Changes"
+          />
+        )}
+      </section>
     </main>
   );
 }

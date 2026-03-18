@@ -1,233 +1,216 @@
-# Dream College Finder
+# 🎓 Dream College Finder
 
-AI-powered college recommendation platform that classifies schools into Reach / Target / Safety using academic profile inputs and provides explainable fit reasoning.
-
-Built with:
-- FastAPI (Backend)
-- PostgreSQL (Docker)
-- SQLModel + Alembic
-- Next.js (App Router + TypeScript + Tailwind)
-- Modular service / repository architecture
+An AI-powered college recommendation platform that helps students discover best-fit universities using academic profile matching, semantic search, and personalized strategy generation.
 
 ---
 
-# 🚀 Current MVP Features
+## 🚀 Overview
 
-✅ Create student profile (GPA, SAT, major, location preference)  
-✅ Run recommendation engine (v1 heuristic model)  
-✅ Rank schools by fit score  
-✅ Classify into Reach / Target / Safety  
-✅ School detail page  
-✅ Explainable “Why this school?” breakdown  
-✅ Probability visualization chart  
+Dream College Finder is a full-stack application that combines **data-driven recommendation systems + LLM-powered insights** to guide students through the college selection process.
+
+Unlike basic search tools, this platform provides:
+- 🎯 Balanced Reach / Target / Safety recommendations  
+- 🧠 AI-generated personalized admissions strategy  
+- 📄 Resume-aware insights  
+- 🔍 RAG-based assistant grounded in real school data  
 
 ---
 
-# 🏗 Project Architecture
+## ✨ Key Features
 
-```
+### 🔐 Authentication & User System
+- Secure email/password login
+- Email verification flow
+- Cookie-based authentication
+- One profile per user (clean data model)
+
+---
+
+### 👤 Student Profile Engine
+Users input:
+- GPA
+- SAT / ACT
+- Intended major
+- State preference
+- Notes
+
+➡️ Drives all downstream recommendations + AI outputs
+
+---
+
+### 🎯 Smart Recommendation Engine
+- Uses **College Scorecard dataset**
+- Multi-factor scoring:
+  - Academic fit
+  - Major alignment (CIP mapping)
+  - Outcomes (salary, graduation rate)
+  - Affordability
+- Produces:
+  - Reach / Target / Safety distribution
+- Includes:
+  - Recommendation caching (performance optimization)
+
+---
+
+### 🏫 School Intelligence Layer
+- Detailed school pages
+- Fit explanations (WHY this school matches)
+- Key metrics:
+  - Admissions rate
+  - Tuition
+  - Earnings outcomes
+  - Graduation rate
+
+---
+
+### 📄 Resume Parsing + Strategy Engine
+- Upload resume (PDF)
+- Extract + structure content using LLM
+- Generate personalized:
+  - Gap analysis
+  - Application strategy
+  - 30-day action plan
+
+---
+
+### 🤖 AI Assistant (RAG System)
+- Embeddings stored in **pgvector**
+- Semantic retrieval over school dataset
+- Grounded responses (not hallucinated)
+- Supports:
+  - School comparisons
+  - Strategy questions
+  - Decision support
+
+---
+
+## 🧠 Tech Stack
+
+### Frontend
+- **Next.js (App Router)**
+- TypeScript
+- Tailwind CSS
+- Recharts (data visualization)
+
+### Backend
+- **FastAPI**
+- SQLModel / SQLAlchemy
+- Alembic migrations
+
+### Database
+- PostgreSQL
+- **pgvector (vector search)**
+
+### AI / ML
+- OpenAI API
+- Embeddings (semantic search)
+- LLM-based:
+  - Resume parsing
+  - Advice generation
+  - RAG assistant
+
+---
+
+## 🏗️ System Architecture
+Frontend (Next.js)
+↓
+API Layer (FastAPI)
+↓
+Service Layer (Business Logic)
+↓
+Repository Layer
+↓
+PostgreSQL + pgvector
+
+---
+
+## 🔄 Core Workflow
+
+1. User signs up and verifies email  
+2. User creates a profile  
+3. System generates recommendations  
+4. User explores schools  
+5. User uploads resume  
+6. System generates strategy advice  
+7. User interacts with AI assistant  
+
+---
+
+## 📊 Key Engineering Highlights
+
+- ⚡ **Caching Layer**
+  - Recommendation caching (profile signature)
+  - Advice caching (profile + resume signature)
+
+- 🧩 **Modular Backend Architecture**
+  - Clear separation: API → Services → Repositories
+
+- 🧠 **RAG Pipeline**
+  - Vector embeddings with pgvector
+  - Retrieval + grounded generation
+
+- 📄 **Resume Intelligence**
+  - Structured parsing from raw PDF
+  - Integrated into recommendation strategy
+
+---
+
+## 🛠️ Local Setup
+
+See full instructions in 👉 `SETUP.md`
+
+Quick start:
+
+```bash
+# backend
+cd backend
+pip install -r requirements.txt
+uvicorn app.main:app --reload
+
+# frontend
+cd frontend
+npm install
+npm run dev
+``` id="setup1"
+---
+
+## 📂 Project Structure
 dreamcollegefinder/
-│
 ├── backend/
-│   ├── app/
-│   │   ├── api/
-│   │   ├── core/
-│   │   ├── db/
-│   │   ├── models/
-│   │   ├── repositories/
-│   │   ├── services/
-│   │   ├── seed/
-│   │   └── main.py
-│   ├── alembic/
-│   ├── requirements.txt
-│   └── .env
-│
+│ ├── app/
+│ ├── alembic/
+│ └── requirements.txt
 ├── frontend/
-│   ├── src/
-│   │   ├── app/
-│   │   ├── components/
-│   │   ├── lib/
-│   │   └── types/
-│   └── .env.local
-│
-├── docker-compose.yml
-└── README.md
-```
+│ ├── src/
+│ └── middleware.ts
+├── README.md
+├── ARCHITECTURE.md
+├── SETUP.md
+├── USER_GUIDE.md
+└── LICENSE
 
 ---
 
-# 🧰 Prerequisites
+## 🎯 Why This Project Matters
 
-- Python 3.12+
-- Node 20+
-- npm 10+
-- Docker
-- Git
+This project demonstrates:
 
----
-
-# ⚙️ Backend Setup
-
-## 1. Start PostgreSQL (Docker)
-
-docker compose up -d
-
-Database:
-- DB Name: dreamcollegefinder
-- User: dreamcollegefinder
-- Password: dreamcollegefinder_pw
-- Port: 5432
+- Full-stack engineering (React + FastAPI)
+- Real-world data integration (College Scorecard)
+- Applied machine learning concepts
+- LLM + RAG system design
+- Production-style architecture (modular + scalable)
+- Product thinking (user flows, caching, UX decisions)
 
 ---
 
-## 2. Setup Python Environment
+## 🚧 Future Improvements
 
-cd backend
-python -m venv .venv
-
-Activate:
-
-Windows:
-.\.venv\Scripts\Activate.ps1
-
-Mac/Linux:
-source .venv/bin/activate
-
-Install dependencies:
-
-pip install -r requirements.txt
+- Improved recommendation system
+- Saved schools / favorites
+- Application tracking dashboard
+- More advanced filtering (budget, size, etc.)
+- Background job queue (Celery / Redis)
+- Improved RAG sources (reviews, rankings)
 
 ---
-
-## 3. Configure Environment Variables
-
-Create backend/.env
-
-DATABASE_URL=postgresql+psycopg://dreamcollegefinder:dreamcollegefinder_pw@localhost:5432/dreamcollegefinder
-
----
-
-## 4. Run Migrations
-
-alembic upgrade head
-
----
-
-## 5. Seed Schools (Only Once)
-
-python -m app.seed.seed_schools
-
----
-
-## 6. Start Backend
-
-uvicorn app.main:app --reload --port 8000
-
-Backend docs:
-http://127.0.0.1:8000/docs
-
----
-
-# 🎨 Frontend Setup
-
-cd frontend
-npm install
-
-Create frontend/.env.local
-
-NEXT_PUBLIC_API_BASE_URL=http://127.0.0.1:8000
-
-Start frontend:
-
-npm run dev
-
-Open:
-http://localhost:3000
-
----
-
-# 🔄 Development Workflow
-
-Profile → Recommendation Service → School Ranking → DB Save → UI Render
-
----
-
-# 🧠 Recommendation Engine (v1)
-
-Scoring factors:
-- GPA vs school average GPA
-- SAT vs school average SAT
-- Acceptance rate baseline
-- Location preference match
-- Lightweight tag match
-
-Probability mapping:
-- ≥ 70% → Safety
-- 45–70% → Target
-- < 45% → Reach
-
----
-
-# 🏛 Architecture Layers
-
-API Layer – HTTP endpoints  
-Repository Layer – Database access  
-Service Layer – Business logic  
-Models Layer – SQLModel schema  
-
----
-
-# 📦 Fresh Setup (New Developer)
-
-docker compose up -d
-cd backend
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-alembic upgrade head
-python -m app.seed.seed_schools
-uvicorn app.main:app --reload --port 8000
-
-In another terminal:
-
-cd frontend
-npm install
-npm run dev
-
----
-
-# 📈 Roadmap
-
-- Embedding-based major matching
-- RAG for admissions requirements
-- Cost & ROI comparison
-- Authentication
-- Deployment
-
----
-
-# 👥 Contributing
-
-git checkout -b feature/your-feature-name
-git commit -m "feat: add feature"
-git push
-
-Open Pull Request.
-
----
-
-# 📌 Notes
-
-- Do NOT commit .env files
-- Do NOT commit .venv
-- Commit migrations
-- Run alembic revision --autogenerate when models change
-
----
-
-# 🏁 MVP Status
-
-✔ End-to-end working:
-Profile → Recommendations → School Detail → Explain Fit
-
-Ready for collaborative development.
