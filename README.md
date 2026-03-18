@@ -112,15 +112,17 @@ Users input:
 ---
 
 ## 🏗️ System Architecture
-Frontend (Next.js)
-↓
-API Layer (FastAPI)
-↓
-Service Layer (Business Logic)
-↓
-Repository Layer
-↓
+```
+Frontend (Next.js)<br>
+↓<br>
+API Layer (FastAPI)<br>
+↓<br>
+Service Layer (Business Logic)<br>
+↓<br>
+Repository Layer<br>
+↓<br>
 PostgreSQL + pgvector
+```
 
 ---
 
@@ -161,7 +163,7 @@ See full instructions in 👉 `SETUP.md`
 
 Quick start:
 
-```bash
+```
 # backend
 cd backend
 pip install -r requirements.txt
@@ -171,7 +173,8 @@ uvicorn app.main:app --reload
 cd frontend
 npm install
 npm run dev
-``` id="setup1"
+```
+
 ---
 
 ## 📂 Project Structure
