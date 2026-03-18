@@ -113,14 +113,14 @@ Users input:
 
 ## 🏗️ System Architecture
 ```
-Frontend (Next.js)<br>
-↓<br>
-API Layer (FastAPI)<br>
-↓<br>
-Service Layer (Business Logic)<br>
-↓<br>
-Repository Layer<br>
-↓<br>
+Frontend (Next.js)
+↓
+API Layer (FastAPI)
+↓
+Service Layer (Business Logic)
+↓
+Repository Layer
+↓
 PostgreSQL + pgvector
 ```
 
@@ -178,6 +178,7 @@ npm run dev
 ---
 
 ## 📂 Project Structure
+```
 dreamcollegefinder/
 ├── backend/
 │ ├── app/
@@ -191,6 +192,7 @@ dreamcollegefinder/
 ├── SETUP.md
 ├── USER_GUIDE.md
 └── LICENSE
+```
 
 ---
 
